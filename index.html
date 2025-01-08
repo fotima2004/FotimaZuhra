@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avtomobilni Baholash</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Avtomobilni Baholash</h1>
+        
+        <div class="form-group">
+            <label for="year">Ishlab chiqarilgan yil:</label>
+            <input type="number" id="year" placeholder="Masalan, 2020" min="1900" required>
+        </div>
+
+        <div class="form-group">
+            <label for="mileage">Yurilgan masofa (km):</label>
+            <input type="number" id="mileage" placeholder="Masalan, 50000" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="fuelType">Yonilg'i turi:</label>
+            <select id="fuelType">
+                <option value="benzin">Benzin</option>
+                <option value="dizel">Dizel</option>
+                <option value="elektr">Elektr</option>
+                <option value="gibrid">Gibrid</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="sellerType">Sotuvchi turi:</label>
+            <select id="sellerType">
+                <option value="shaxsiy">Shaxsiy</option>
+                <option value="diler">Diler</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="transmission">Uzatmalar qutisi:</label>
+            <select id="transmission">
+                <option value="mexanik">Mexanik</option>
+                <option value="avtomatik">Avtomatik</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="ownership">Egalik holati:</label>
+            <select id="ownership">
+                <option value="birinchi">Birinchi egasi</option>
+                <option value="ikkinchi">Ikkinchi yoki undan ko'p</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="fuelEfficiency">Yonilg'i sarfi (l/100km):</label>
+            <input type="number" id="fuelEfficiency" placeholder="Masalan, 6.5" step="0.1" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="engineSize">Dvigatel hajmi (sm³):</label>
+            <input type="number" id="engineSize" placeholder="Masalan, 2000" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="maxPower">Maksimal quvvat (hp):</label>
+            <input type="number" id="maxPower" placeholder="Masalan, 150" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="seats">O'rindiqlar soni:</label>
+            <input type="number" id="seats" placeholder="Masalan, 5" min="1" required>
+        </div>
+
+        <button onclick="predictCarValue()">Avtomobil bahosini taxmin qiling</button>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        function predictCarValue() {
+            const year = parseInt(document.getElementById('year').value);
+            const mileage = parseInt(document.getElementById('mileage').value);
+            const fuelType = document.getElementById('fuelType').value;
+            const sellerType = document.getElementById('sellerType').value;
+            const transmission = document.getElementById('transmission').value;
+            const ownership = document.getElementById('ownership').value;
+            const fuelEfficiency = parseFloat(document.getElementById('fuelEfficiency').value);
+            const engineSize = parseInt(document.getElementById('engineSize').value);
+            const maxPower = parseInt(document.getElementById('maxPower').value);
+            const seats = parseInt(document.getElementById('seats').value);
+            const resultDiv = document.getElementById('result');
+
+            if (!year || !mileage || !fuelEfficiency || !engineSize || !maxPower || !seats || year < 1900 || mileage < 0 || fuelEfficiency < 0 || engineSize < 0 || maxPower < 0 || seats < 1) {
+                resultDiv.innerHTML = 'Iltimos, barcha maydonlarni to'g'ri to'ldiring.';
+                return;
+            }
+
+            // Simple prediction logic (this can be replaced with a more advanced algorithm)
+            let valuePrediction = 10000; // Starting base value
+
+            // Adjust value based on inputs
+            const age = new Date().getFullYear() - year;
+            valuePrediction -= age * 500; // Depreciation per year
+            valuePrediction -= mileage * 0.05; // Depreciation per km
+            valuePrediction -= fuelEfficiency * 50; // Higher fuel consumption reduces value
+
+            if (fuelType === 'dizel') valuePrediction += 1000;
+            if (fuelType === 'elektr') valuePrediction += 5000;
+
+            if (sellerType === 'diler') valuePrediction += 500;
+            if (transmission === 'avtomatik') valuePrediction += 2000;
+
+            if (ownership === 'ikkinchi') valuePrediction -= 1500;
+
+            valuePrediction += engineSize * 0.2;
+            valuePrediction += maxPower * 10;
+            valuePrediction += seats * 100;
+
+            valuePrediction = Math.max(valuePrediction, 0); // Ensure value doesn't go below 0
+
+            resultDiv.innerHTML = `Avtomobilning taxminiy bahosi: $${valuePrediction.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
